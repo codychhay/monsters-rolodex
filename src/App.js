@@ -9,11 +9,11 @@ class App extends React.Component {
     //  - Fetch cardList array after componentDidMount, to make sure we have thing to mount to.
     //  - SearchBox Functionality-- define eventHandler for handling onChange, capture input value and filter cardList.
 
-
     constructor() {
         super();
         this.state = {
-            'cardList': []
+            'cardList': [],
+            'searchField':''
         }
     }
 
@@ -24,12 +24,19 @@ class App extends React.Component {
             .catch(err => console.log(err.message));
     }
 
+    onChangeHandler = (event) => {
+        // After search input val is set, it will trigger render()
+        this.setState({searchField: event.target.value})
+    };
+
     render() {
+        const {cardList, searchField} = this.state;
+        const filteredCardList = cardList.filter(card => card.name.toLowerCase().includes(searchField.toLowerCase()));
         return (
             <div className="App">
                 <h1>Monsters Rolodex</h1>
-                <SearchBox />
-                <CardList cardList={this.state.cardList} />
+                <SearchBox onChangeHandler={this.onChangeHandler} />
+                <CardList cardList={filteredCardList} />
             </div>
         );
     }
